@@ -14,18 +14,27 @@ import sys
 #
 
 def lilysHomework(arr):
-    # Write your code here
-    sorted_arr = sorted(arr)
-    reverse_sorted_arr = sorted(arr, reverse=True)
-    count = 0
-    for i in range(len(arr)):
-        if arr[i] != sorted_arr[i]:
-            count += 1
-    reverse_count = 0
-    for i in range(len(arr)):
-        if arr[i] != reverse_sorted_arr[i]:
-            reverse_count += 1
-    return min(count, reverse_count)
+    def min_swaps_to_sort(arr):
+        sorted_arr = sorted(arr)
+        index_map = {value: index for index, value in enumerate(arr)}
+        swaps = 0
+
+        for i in range(len(arr)):
+            if arr[i] != sorted_arr[i]:
+                swaps += 1
+                correct_value = sorted_arr[i]
+                current_value = arr[i]
+                correct_index = index_map[correct_value]
+                arr[i], arr[correct_index] = arr[correct_index], arr[i]
+                index_map[current_value] = correct_index
+                index_map[correct_value] = i
+
+        return swaps
+
+    ascending_swaps = min_swaps_to_sort(arr.copy())
+    descending_swaps = min_swaps_to_sort(arr[::-1])
+
+    return min(ascending_swaps, descending_swaps)
 
 if __name__ == '__main__':
     fptr = open(os.environ['OUTPUT_PATH'], 'w')
